@@ -1,10 +1,27 @@
-import { FETCH_USER } from '../actions/types';
+const passport = require('passport');
 
-export default function(state = null, action) {
-  switch (action.type) {
-    case FETCH_USER:
-      return action.payload || false;
-    default:
-      return state;
-  }
-}
+module.exports = app => {
+  app.get(
+    '/auth/google',
+    passport.authenticate('google', {
+      scope: ['profile', 'email']
+    })
+  );
+
+  app.get(
+    '/auth/google/callback',
+    passport.authenticate('google'),
+    (req, res) => {
+      res.redirect('/surveys');
+    }
+  );
+
+  app.get('/api/logout', (req, res) => {
+    req.logout();
+    res.send(req.user);
+  });
+
+  app.get('/api/current_user', (req, res) => {
+    res.send(req.user);
+  });
+};
