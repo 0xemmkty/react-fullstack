@@ -1,4 +1,3 @@
-
 import _ from 'lodash';
 import React, { Component } from 'react';
 import { reduxForm, Field } from 'redux-form';
@@ -31,9 +30,7 @@ class SurveyForm extends Component {
   render() {
     return (
       <div>
-        <form
-          onSubmit={this.props.handleSubmit((values) => console.log(values))}
-        >
+        <form onSubmit={this.props.handleSubmit(this.props.onSurveySubmit)}>
           {this.renderFields()}
           <Link to="/surveys" className="red btn-flat white-text">
             Cancel
@@ -63,4 +60,5 @@ function validate(values) {
 export default reduxForm({
   validate,
   form: 'surveyForm',
+  destroyOnUnmount: false,
 })(SurveyForm);
