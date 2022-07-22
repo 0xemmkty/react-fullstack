@@ -6,9 +6,14 @@ const surveyTemplate = require('../services/emailTemplates/surveyTemplate');
 
 const Survey = mongoose.model('surveys');
 
-module.exports = (app) => {
+module.exports = app => {
   app.get('/api/surveys/thanks', (req, res) => {
     res.send('Thanks for voting!');
+  });
+
+  app.post('/api/surveys/webhooks', (req, res) => {
+    console.log(req.body);
+    res.send({});
   });
 
   app.post('/api/surveys', requireLogin, requireCredits, async (req, res) => {
@@ -18,11 +23,9 @@ module.exports = (app) => {
       title,
       subject,
       body,
-      recipients: recipients
-        .split(',')
-        .map((email) => ({ email: email.trim() })),
+      recipients: recipients.split(',').map(email => ({ email })),
       _user: req.user.id,
-      dateSent: Date.now(),
+      dateSent: Date.now()
     });
 
     // Great place to send an email!
